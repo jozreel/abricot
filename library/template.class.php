@@ -12,7 +12,7 @@ class ab_template
 		
 		extract($template);
 		extract($regions);
-		//$output = preg_replace($pattern, '\$$1', $lada);
+		$output = preg_replace($pattern, '\$$1', $lada);
 		$output = preg_replace('|{title}|', $title, $lada);
 		var_dump($output);
 		echo $output;
