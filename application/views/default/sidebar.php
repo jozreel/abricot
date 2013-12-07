@@ -1,0 +1,1 @@
+<div style="background: blue; height:100%; width:80px; float: right;"></div>
