@@ -1,3 +1,4 @@
 <?php
 $template = array();
-$template['templatable'] = false;
+$template['templatable'] = true;
+$template['regions'] = array('title'=>'ala is king','content'=>'');

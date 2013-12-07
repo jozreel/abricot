@@ -21,7 +21,13 @@ class ab_output
 	
 	
 	public function render($donotrender = 0){
-		
+		global $template;
+		if(isset($template['templatable'])&& $template['templatable']==true)
+		{
+			$tmp = new ab_template();
+			$tmp->render_template($this->output_data);
+		}	
+		else{	
 		if(file_exists(ROOT.DS.'application'.DS.'views'.DS.'header.php') && $donotrender==0)
 		{
 			require_once(ROOT.DS.'application'.DS.'views'.DS.'header.php');
@@ -30,6 +36,7 @@ class ab_output
 		if(file_exists(ROOT.DS.'application'.DS.'views'.DS.'footer.php') && $donotrender ==0)
 		{
 			require_once(ROOT.DS.'application'.DS.'views'.DS.'footer.php');
+		}
 		}
 	}
 	
