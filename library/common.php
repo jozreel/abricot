@@ -78,6 +78,80 @@ function ab_add_html_ent()
 		$_COOKIE = ab_tohtml_entities($_COOKIE);
 }
 
+
+
+
+function & ab_load_class($class, $dir="library")
+{
+	
+	$prefix = 'ab_';
+	$name = "";
+    static $loaded_classes = array();
+    
+    if(isset($loaded_classes[$class]))
+    { 
+    	return $loaded_classes[$class];
+    }
+    
+    foreach(array(APP_PATH,BASE_PATH,BASE_LIB) as $path)
+    {
+    
+    	
+    	if(file_exists($path.$dir.DS.$class.'.php'))
+    	{    
+    		$name = $prefix.$class;
+    		if(class_exists($name, false)===false)
+    		{
+    			require_once($path.$dir.DS.$class.'.php');
+    		}
+    		break;
+    		
+    	}
+    	if(file_exists($path.$dir.DS.$class.'.class.php'))
+    	{
+    		
+    		$name = $prefix.$class;
+    		if(class_exists($name, false)===false)
+    		{
+    			require_once($path.$dir.DS.$class.'.class.php');
+    		}
+    		break;
+    	
+    	}
+    }
+    if(empty($name))
+    {
+    	ab_display_err("UNABlE TO LOCATE SPECIFIED FILE");
+    	//return;
+    	exit('EXIT_UNKNOWN_CLASS');
+    }
+    if(file_exists(APP_PATH.DS.$dir));
+    
+    ab_loaded($class);
+   
+    $loaded_classes[$class] = new $name();
+   // print_r($loaded_classes);
+    return  $loaded_classes[$class];
+    
+}
+
+
+function & ab_loaded($class = "")
+{
+	static $is_loaded = array();
+	if($class !== '')
+	{
+	   $is_loaded[strtolower($class)]= $class;
+	}
+	//print_r($is_loaded);
+	return $is_loaded;
+}
+
+
+
+
+
+
 /** call to perform action via controller class and render page **/
 
 function ab_doaction($controller, $action, $querystr=null, $render=0)
@@ -165,9 +239,11 @@ function ab_main()
 	{
 		$controller = $default['controller'];
 		$action = $default['action'];
+		
 	}
 	else{
 		$url = ab_route_url($url);
+		echo $url;
 		$urlstring_array = array();
 		$urlstring_array =explode("/", $url);
 		$controller = $urlstring_array[0];
@@ -184,10 +260,11 @@ function ab_main()
 	}
 
 	$ab_controller_name = ucfirst($controller);
-	$ab_output_inst = new ab_output();
-	$ab_child_controller = new $ab_controller_name($controller, $action);
-   
-     $ab_child_controller->output  = $ab_output_inst;
+	
+	$ab_child_controller = new $ab_controller_name();
+	//$ab_output_inst = new ab_output();
+	//$ab_child_controller->output  = $ab_output_inst;
+    
 	if(method_exists($ab_controller_name, $action))
 	{
 		if(method_exists($ab_controller_name, 'beforeAction'))
@@ -210,15 +287,5 @@ function ab_main()
 
 
 
-spl_autoload_register(ab_autoload);
-ab_compress_output();
 
-//todo: initialize cache;
-
-//todo: initialize inflect;
-
-ab_set_reporting();
-ab_remove_magic_quotes();
-ab_unregister_globals();
-ab_main();
 

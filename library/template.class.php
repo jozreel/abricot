@@ -1,22 +1,34 @@
 <?php
 class ab_template
 {
+	
+	public static function set_vals($matches)
+	{
+		global $template;
+		
+		$regions =  $template['regions'];
+		
+		return $regions[$matches[1]];
+		
+	}
+	
 	function render_template($data)
 	{ 
-		global $template;
-		//print_r($template);
-		$lada = file_get_contents(VIEW_PATH.DS.'default/default.php');
-		$pattern = '/\{([A-Za-z]+)\}/';
-		//$output = preg_replace($pattern, '\$$1', $lada);
+		
+	
+		$pattern = '/\{(\w+)\}/';
 		
 		
-		extract($template);
-		extract($regions);
-		$output = preg_replace($pattern, '\$$1', $lada);
-		$output = preg_replace('|{title}|', $title, $lada);
-		var_dump($output);
+		
+	
+		$output = preg_replace_callback($pattern,"self::set_vals", $data);
+		
+		
+	
+		
 		echo $output;
-		
-		//echo $subject;
 	}
+	
+	
+ 
 }

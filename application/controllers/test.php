@@ -1,5 +1,5 @@
 <?php 
-class Test extends ab_Controller
+class Test extends ab_controller
 {   
 	function index()
 	{
@@ -10,7 +10,9 @@ class Test extends ab_Controller
 		$this->load->model('TestModel');
 		//$this->TestModel->saybla();
 		$this->load->view('default/default',$als);
-		$this->load->view('default/sidebar');
+		$this->load->library('session');
+		$this->session->foo();
+		//$this->load->view('default/sidebar');
 		
 	}
 }

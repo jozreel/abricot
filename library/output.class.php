@@ -7,6 +7,7 @@ class ab_output
 	
 	function ab_append_output($output)
 	{
+		
 		if(empty($this->output_data))
 		{
 			$this->output_data = $output;
@@ -22,6 +23,7 @@ class ab_output
 	
 	public function render($donotrender = 0){
 		global $template;
+		
 		if(isset($template['templatable'])&& $template['templatable']==true)
 		{
 			$tmp = new ab_template();
@@ -42,7 +44,7 @@ class ab_output
 	
 	
 	public function ab_display_output()
-	{  
+	{
 		echo $this->output_data;
 	}
 }

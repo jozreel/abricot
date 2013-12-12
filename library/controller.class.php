@@ -1,5 +1,5 @@
 <?php
-class ab_Controller
+class ab_controller
 {
 	protected $_controller;
 	protected $_action;
@@ -9,13 +9,20 @@ class ab_Controller
 	public $output;
 	private $noRender;
 	
-	function __construct($controller, $action)
+	function __construct()
 	{
 		
 		self::$ab_instance = $this;
 		//$this->_controller = ucfirst($controller);
 		//$this->_action = $action;
 		//$model = ucfirst(singularize($controller)).'Model'
+		//print_r(ab_loaded());
+		foreach (ab_loaded() as $key => $class)
+		{
+			//echo "tyuoto";
+			$this->$key = ab_load_class($class);
+			//echo ab_load_class($class)->ab_display_output();
+		}
 		$this->noRender = 0;
 		$this->load = new ab_loadable();
 		//$this->output= new ab_output();

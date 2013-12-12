@@ -3,7 +3,7 @@ class ab_loadable
 {
 		protected $ab_loaded_classes = array();
 		protected $ab_view_path = array(VIEW_PATH);
-		protected $ab_library_path;
+		protected $ab_library_path = array(CORE_LIB,USR_LIB);
 		protected $ab_models = array();
 		protected $ab_model_path = array(MODEL_PATH);
 		protected $ab_controller_inst;
@@ -186,6 +186,110 @@ class ab_loadable
 			
 		}
 			
+	}
+	
+	public function ab_load_class($class, $args=null, $name="")
+	{
+		$class = str_replace(".php","",trim($class,"/"));
+		
+		if($sep = strpos($class,'/')!==false)
+		{
+			$subdir = substr($class, 0,++$sep);
+			$class = substr($class, $sep);
+		}
+		else 
+			$subdir ='';
+		//$class = ucfirst($class);
+		
+		
+		
+		foreach ($this->ab_library_path as $path)
+		{
+			
+			$file_path = $path.$subdir.$class.'.php';
+			if(class_exists($class, FALSE))
+			{
+				if($name != null)
+				{
+					$ABC = & ab_Controller::get_ab_instance();
+					if(!isset($ABC->$name))
+					{
+						return $this->initialize_class($class, '', $args, $name);
+					}
+					ab_display_err($class." class already exists failed to load on second attempt");
+				}
+			}
+			if(!file_exists($file_path))
+			{
+				continue; 
+			}
+			}
+			//echo $path;
+			include_once($file_path);
+			return $this->initialize_class($class, '', $args, $name);
+		
+	}
+		
+	
+	public function initialize_class($class, $prefix="", $params=false, $objname=null)
+	{
+		if($prefix ==="")
+		{
+			if(class_exists('ab_'.$class))
+			{
+				$name = 'ab_'.$class;
+			}
+			else
+			{
+				$name=$prefix.$class;
+			}
+		}
+		else {
+			$name = $prefix.$class;
+		}
+		
+		if(!class_exists($name))
+		{
+			ab_display_err("trting to load a none existent class");
+		}
+		
+		if(empty($objname))
+		{
+			$objname = strtolower($class);
+		}
+		
+		$ABC = & ab_Controller::get_ab_instance();
+		if(isset($ABC->$objname))
+		{
+			if($ABC->$objname instanceof $class)
+			{
+			  ab_display_err($objname." already exist");
+			}
+		}
+		$this->ab_loaded_classes[$objname] = $class;
+		$ABC->$objname = isset($params) ?new name($params): new $name();
+	}
+	
+	public function library($library='', $params=null,$name='')
+	{
+		if(empty($library))
+		{
+			return;
+		}
+		else if(is_array($library))
+		{
+			foreach ($library as $lib)
+			{
+				$this->ab_library($lib, $prefix, $params);
+				
+			}
+			return;
+		}
+		if($params !==null && !is_array($params))
+		{
+			$params = null;
+		}
+		$this->ab_load_class($library, $params, $name);
 	}
 		
 }

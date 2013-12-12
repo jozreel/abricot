@@ -7,8 +7,12 @@ define('DB_HOST', 'localhost'); /** The Hostname or IP addrss of the database se
 define('DB_PORT', '3306');        /** The port for db **/
 define('DB_USER', 'dbuser');    /** The DB user for abricot **/
 define('DB_PASSWORD', 'password'); /** The password for abricot DB **/
-define('BASE_PATH', 'http://localhost/firecode'); /** The basepath for this application **/
+define('BASE_PATH', 'http://abricot.net/'); /** The basepath for this application **/
 define('PAGINATION_LIMIT', '5'); /** The maximum number to display per page when pagination used **/
 define('class_prefix', 'ab_');
 define('MODEL_PATH', ROOT.DS.'application'.DS.'models'.DS);
 define('VIEW_PATH', ROOT.DS.'application'.DS.'views'.DS);
+define("APP_PATH", ROOT.DS.'application'.DS);
+define("BASE_LIB", ROOT.DS);
+define('CORE_LIB', ROOT.DS.'library'.DS);
+define('USR_LIB', APP_PATH.'library'.DS);
