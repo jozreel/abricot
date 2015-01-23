@@ -1,0 +1,30 @@
+@CHARSET "UTF-8";
+body, html, element{margin:0px; padding:0px;}
+#header{background: #ffffff; width: 100%; height: 80px; clear: both;}
+#header h3{margin-top: 0px;  color: white; font-family: cursive; margin-left: 20px;font-size: large; width: 300px; float: left; padding-top: 30px; color: #ef1f6d;}
+#content{margin: 0 auto; width: 1024px; height: 768px;}
+.snippet{width: 300px; height:200px; background: #5dd6f4; float:left; margin: 20px 60px 0px 0px;}
+
+#snipetgroup{width: 100%; height: 400px; background: #EBEFF2;}
+#featured{}
+#featured h2{ padding: 20px 20px 20px 20px;}
+#featured p{ padding:0px 20px 20px 20px;}
+.snippetg{width: 300px; height:200px; background: #7fb112; float:left; margin: 20px 60px 0px 0px;}
+.snippeto{width: 300px; height:200px; background: #9ecd64; float:left; margin: 20px 60px 0px 0px;}
+
+.snippet_last{width: 304px; height:200px; background: #ff751a; float:left; margin: 20px 0px 0px 0px;}
+.holder{width:100%; float: left; margin-top: 40px;}
+.mediabox{width: 100%; height: 400px; background: 	#ea835a; margin :0 auto; padding-top: 20px;}
+iframe {
+	display: block; margin: 0 auto;
+}
+
+
+#footer{width: 100%; float: left; margin: 20px 0px 0px 0px; background: #62555a;}
+#footer_center{margin: 0 auto; width: 1024px; height: 200px;}
+#footer p{margin: 0; padding: 0;}
+.canvHoldHd{width:100px; height: 80px; float: right; border: none 0px #fff; text-align: right; /*background: #fff url(../images/cirl.png) right;*/}
+.canvHoldHdf{width:100px; height: 80px;  float: right; border: none 0px #fff; text-align: right;/*background: #fff url(../images/cir.png);*/}
+#headcent{width: 1024px; margin: 0 auto;}
+#arc1{border:0px none #ffffff;}
+#whteffect{width: 660px;; height:80px; /*background:url(../images/bby4.png) left top no-repeat;*/ float: right;}

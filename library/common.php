@@ -81,7 +81,7 @@ function ab_add_html_ent()
 
 
 
-function & ab_load_class($class, $dir="library")
+function  ab_load_class($class, $dir="library")
 {
 	
 	$prefix = 'ab_';
@@ -182,14 +182,19 @@ function ab_route_url($url)
 function ab_compress_output()
 {
 	
-	
-	if(substr_count($_SERVER['HTTP_ACCEPT_ENCODING'],'gzip'))
+if(substr_count($_SERVER['HTTP_ACCEPT_ENCODING'],'gzip'))
 	{
 		
-		ob_start('ob_gzhabndler');
+		ob_start('ob_gzhandler');
+		
 	}
 	else
+	{
+		
 		ob_start();
+		
+	}
+	    
 }
 
 /** autoload the classes that are requires for abricot framework **/

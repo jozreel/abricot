@@ -11,7 +11,7 @@ class Test extends ab_controller
 		//$this->TestModel->saybla();
 		$this->load->view('default/default',$als);
 		$this->load->library('session');
-		$this->session->foo();
+		//$this->session->foo();
 		//$this->load->view('default/sidebar');
 		
 	}

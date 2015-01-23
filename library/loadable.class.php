@@ -291,5 +291,29 @@ class ab_loadable
 		}
 		$this->ab_load_class($library, $params, $name);
 	}
+	
+	public function ab_autoload()
+	{
+		if(file_exists(BASE_LIB.'config'.DS.'autoload.php'))
+		{
+			include(BASE_LIB.'config'.DS.'autoload.php');
+		}
+		if(!isset($autoload))
+			return false;
+		
+		if(isset($autoload['libraries']))
+		{
+			if(in_array('database', $autoload['libraries']))
+			{
+				$this->database();
+			}
+				
+		}
+	}
+	
+	public function initialize()
+	{
+		$this->ab_autoload();
+	}
 		
 }

@@ -20,4 +20,25 @@ class ab_html{
 			$data = '<a href ="'.$bpath.'/'.$path.'">'.$text.'</a>';
 		return $data;
 	}
+	
+	public function includeCss($fileName)
+	{
+		$data = '<link href="'.BASE_PATH.'/css/'.$fileName.'.css" rel="stylesheet"></link>';
+		return $data;
+	}
+	
+	function embed($link)
+	{
+		$ytarray=explode("/", $link);
+		$ytendstring=end($ytarray);
+		$ytendarray=explode("?v=", $ytendstring);
+		$ytendstring=end($ytendarray);
+		$ytendarray=explode("&", $ytendstring);
+		$ytcode=$ytendarray[0];
+	
+	
+		//echo $link;
+		return '<iframe width="640" height="360" src="//www.youtube.com/embed/'.$ytcode.'?feature=player_detailpage" frameborder="0" allowfullscreen></iframe>';
+	}
+	
 }

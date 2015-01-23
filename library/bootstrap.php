@@ -8,8 +8,8 @@ require_once (ROOT . DS . 'library' . DS . 'common.php');
 //echo "yes";
 
 //create a load class function ;
-$out = & ab_load_class('output','library');
-spl_autoload_register(ab_autoload);
+$out =  ab_load_class('output','library');
+spl_autoload_register('ab_autoload');
 ab_compress_output();
 
 //todo: initialize cache;

@@ -16,7 +16,8 @@ class ab_controller
 		//$this->_controller = ucfirst($controller);
 		//$this->_action = $action;
 		//$model = ucfirst(singularize($controller)).'Model'
-		//print_r(ab_loaded());
+		print_r($is_loaded);
+		
 		foreach (ab_loaded() as $key => $class)
 		{
 			//echo "tyuoto";

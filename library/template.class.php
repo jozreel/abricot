@@ -7,8 +7,8 @@ class ab_template
 		global $template;
 		
 		$regions =  $template['regions'];
-		
 		return $regions[$matches[1]];
+		
 		
 	}
 	
