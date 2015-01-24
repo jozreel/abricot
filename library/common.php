@@ -221,6 +221,11 @@ function ab_autoload($class)
 		//echo $class;
 		require_once(ROOT.DS.'application'.DS.'models'.DS.strtolower($class).'.php');
 	}
+	else if(file_exists(ROOT.DS.'db'.DS.'drivers'.DS.strtolower($class).'.php'))
+	{
+		//echo $class;
+		require_once(ROOT.DS.'db'.DS.'drivers'.DS.strtolower($class).'.php');
+	}
 
 }
 

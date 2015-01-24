@@ -8,15 +8,16 @@ class ab_controller
 	public static $ab_instance;
 	public $output;
 	private $noRender;
+	private $dbdriver;
 	
 	function __construct()
 	{
-		
+		//$this->load_dbdriver();
 		self::$ab_instance = $this;
 		//$this->_controller = ucfirst($controller);
 		//$this->_action = $action;
 		//$model = ucfirst(singularize($controller)).'Model'
-		print_r($is_loaded);
+		
 		
 		foreach (ab_loaded() as $key => $class)
 		{
@@ -24,6 +25,7 @@ class ab_controller
 			$this->$key = ab_load_class($class);
 			//echo ab_load_class($class)->ab_display_output();
 		}
+		
 		$this->noRender = 0;
 		$this->load = new ab_loadable();
 		//$this->output= new ab_output();
@@ -36,6 +38,9 @@ class ab_controller
 	{
 		return self::$ab_instance;
 	}
+	// place this in model.class constructor instead.
+	
+	
 	function __destruct()
 	{
 		$this->output->render($this->noRender);

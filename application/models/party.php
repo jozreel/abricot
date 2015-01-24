@@ -1,5 +1,5 @@
 <?php
-class TestModel extends ab_Model
+class Party extends ab_model
 {
 	public $bla;
 	

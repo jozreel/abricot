@@ -24,7 +24,7 @@ class ab_loadable
 		if(empty($model))
 		{
 			return;
-		}
+		} 
 		else if(is_array($model))
 		{
 			foreach ($model as $key=>$val)
@@ -61,6 +61,8 @@ class ab_loadable
 			{
 				$db = '';
 			}
+			//$ dbdriver = ab_dbdriver::get_db_instance() ? ab_dbdriver::get_db_instance():new ab_
+				
 			//load database here.
 		}
 		foreach ($this->ab_model_path as $mod_path)
