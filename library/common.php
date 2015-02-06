@@ -181,20 +181,26 @@ function ab_route_url($url)
 /** compreses output to send to browser **/
 function ab_compress_output()
 {
-	
-if(substr_count($_SERVER['HTTP_ACCEPT_ENCODING'],'gzip'))
+	$modules = apache_get_modules();
+	//var_dump($modules);
+if(ini_get('zlib.output_compression') == 1 ||ini_get('zlib.output_compression_level') > 0 
+    	||ini_get('output_handler') == 'ob_gzhandler' )
+	return;
+
+else if(substr_count($_SERVER['HTTP_ACCEPT_ENCODING'],'gzip'))
 	{
-		
-		ob_start('ob_gzhandler');
-		
+		      //$ob = ob_deflatehandeler();
+			  
+		         ob_start('ob_gzhandler');
+		         var_dump($modules);
+		          
 	}
-	else
+else
 	{
 		
 		ob_start();
 		
 	}
-	    
 }
 
 /** autoload the classes that are requires for abricot framework **/
@@ -253,7 +259,7 @@ function ab_main()
 	}
 	else{
 		$url = ab_route_url($url);
-		echo $url;
+		
 		$urlstring_array = array();
 		$urlstring_array =explode("/", $url);
 		$controller = $urlstring_array[0];
@@ -270,6 +276,8 @@ function ab_main()
 	}
 
 	$ab_controller_name = ucfirst($controller);
+	//echo $controller;
+	
 	
 	$ab_child_controller = new $ab_controller_name();
 	//$ab_output_inst = new ab_output();

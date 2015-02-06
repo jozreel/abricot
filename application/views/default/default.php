@@ -2,8 +2,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
- <?php  $html = new ab_html(); ?>
-<title>{ab_theme_title}</title>
+ <?php  $html = new ab_html(); 
+ global $template;
+ $template['regions']['bottom']="lower content";
+ ?>
+<title><?php echo $title ?></title>
 <?php  echo $html->includeCss("main"); ?>
 <!-- <script type="text/javascript">
 var imgThmb = document.createElement('img');
@@ -35,7 +38,7 @@ ctx.stroke();
 </head>
 
 <body>
-{ab_theme_content}
+
 
 <div id="header"><div id="headcent"><h3>KIDSFUNREADSPACE</h3> 
 <div id="whteffect">
@@ -47,14 +50,20 @@ ctx.stroke();
 <div class="canvHoldHdf"> <canvas  id ="arc3" width="80" height="80"></canvas></div>
 
 </div>
+<div id =search>
+<input class= "csearch" type="search" name ="search" placeholder="search" />
+</div>
 </div>
 
 </div>
 <div id="content">
+
 <div id=snipetgroup>
+<div class="center-box">
 <div id="featured">
-<h2>Featured Stories</h2>
-<p>Here you will find all stories for your children help you self</p>
+<div id =search></div>
+<h2>Featured Stories</h2> 
+<p>Here you will find all stories for your children help you self {ab_theme_content}</p>
 
 </div>
 <div class="snippet">
@@ -72,14 +81,16 @@ ctx.stroke();
 <a href ="#"><img src="<?php echo BASE_PATH.'/images/img3.jpg';?>" width="304" height="200" /></a>
 </div>
 </div>
+</div>
 <div class="holder">
-<div class="mediabox"><?php echo $html->embed("http://www.youtube.com/watch?v=7RCGKZ6g2CE");?></div>
+<div class="mediabox"> <textarea rows="20" cols="100"></textarea></div>
+</div>
+</div>
 
-</div>
-</div>
 <div id="footer">
 <div id="footer_center">
-<span>kidsfunread.com &copy; 2014</span> &nbsp; &nbsp; <span>Home | Srories| Animated Movies| Folk tales</span>
+
+<span>kidsfunread.com {bottom} &copy; 2014</span> &nbsp; &nbsp; <span>Home | Srories| Animated Movies| Folk tales</span>
 </div>
 </div>
 
@@ -89,15 +100,15 @@ var c=document.getElementById("arc4");
 var ctx=c.getContext("2d");
 ctx.beginPath();
 ctx.arc(40,40,38,0,2*Math.PI);
-ctx.fillStyle=" #ffffff";
+ctx.fillStyle=" #FFC107";
 ctx.webkitImageSmoothingEnabled=true;
-ctx.strokeStyle="#ef1f6d";
+ctx.strokeStyle="#FFC107";
 ctx.lineWidth = 2; 
 ctx.stroke();
 ctx.fill();
 ctx.clip();
 ctx.font="10pt Georgia";
-ctx.fillStyle="#7fb112";
+ctx.fillStyle="#ffffff";
 
 ctx.fillText("Contact",15,45);
 </script>
@@ -108,9 +119,9 @@ var c=document.getElementById("arc6");
 var ctx=c.getContext("2d");
 ctx.beginPath();
 ctx.arc(40,40,38,0,2*Math.PI);
-ctx.fillStyle=" #009acd";
+ctx.fillStyle=" #03A9F4";
 ctx.webkitImageSmoothingEnabled=true;
-ctx.strokeStyle="#009acd";
+ctx.strokeStyle="#03A9F4";
 ctx.lineWidth = 2; 
 ctx.stroke();
 ctx.fill();
@@ -125,9 +136,9 @@ var c=document.getElementById("arc5");
 var ctx=c.getContext("2d");
 ctx.beginPath();
 ctx.arc(40,40,38,0,2*Math.PI);
-ctx.fillStyle=" #7fb112";
+ctx.fillStyle=" #8BC34A";
 ctx.webkitImageSmoothingEnabled=true;
-ctx.strokeStyle="#7fb112";
+ctx.strokeStyle="#8BC34A";
 ctx.lineWidth = 2; 
 ctx.stroke();
 ctx.fill();
@@ -144,9 +155,9 @@ var c=document.getElementById("arc1");
 var ctx=c.getContext("2d");
 ctx.beginPath();
 ctx.arc(40,40,38,0,2*Math.PI);
-ctx.fillStyle=" #ff751a";
+ctx.fillStyle=" #FF5722";
 ctx.webkitImageSmoothingEnabled=true;
-ctx.strokeStyle="#ff751a";
+ctx.strokeStyle="#FF5722";
 ctx.lineWidth = 2; 
 ctx.stroke();
 ctx.fill();
@@ -161,9 +172,9 @@ var c=document.getElementById("arc2");
 var ctx=c.getContext("2d");
 ctx.beginPath();
 ctx.arc(40,40,38,0,2*Math.PI);
-ctx.fillStyle="#9ecd64"
+ctx.fillStyle="#CDDC39"
 ctx.webkitImageSmoothingEnabled=true;
-ctx.strokeStyle="#9ecd64";
+ctx.strokeStyle="#CDDC39";
 ctx.lineWidth = 2; 
 ctx.stroke();
 ctx.fill();
@@ -179,9 +190,9 @@ var ctx=c.getContext("2d");
 ctx.beginPath();
 ctx.arc(40,40,38,0,2*Math.PI);
 ctx.webkitImageSmoothingEnabled=true;
-ctx.fillStyle="#f0449a";
+ctx.fillStyle="#E91E63";
 ctx.fill();
-ctx.strokeStyle="#f0449a";
+ctx.strokeStyle="#E91E63";
 ctx.lineWidth = 2; 
 ctx.stroke();
 ctx.clip();

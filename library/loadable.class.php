@@ -96,6 +96,7 @@ class ab_loadable
 		return aray_search(ucfirst($class),$this->ab_loaded_classes,TRUE);
 	}
 	
+	//function similar to code igniter
 	public function ab_load($ab_data)
 	{
 		foreach(array('ab_view','ab_vars','ab_path','ab_return') as $ab_val)

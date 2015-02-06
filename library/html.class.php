@@ -23,7 +23,15 @@ class ab_html{
 	
 	public function includeCss($fileName)
 	{
+		
 		$data = '<link href="'.BASE_PATH.'/css/'.$fileName.'.css" rel="stylesheet"></link>';
+		return $data;
+	}
+	
+	public function includeJavascript($fileName)
+	{
+	
+		$data = '<script src="'.BASE_PATH.'/js/'.$fileName.'.js" "></script>';
 		return $data;
 	}
 	

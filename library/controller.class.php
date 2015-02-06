@@ -10,7 +10,7 @@ class ab_controller
 	private $noRender;
 	private $dbdriver;
 	
-	function __construct()
+	function __construct() 
 	{
 		//$this->load_dbdriver();
 		self::$ab_instance = $this;
@@ -26,8 +26,8 @@ class ab_controller
 			//echo ab_load_class($class)->ab_display_output();
 		}
 		
-		$this->noRender = 0;
 		$this->load = new ab_loadable();
+		$this->noRender = 0;
 		//$this->output= new ab_output();
 		//$this->current_ab_controller = get_class($this);
 		

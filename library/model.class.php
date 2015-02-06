@@ -4,7 +4,7 @@ global $db;
 		{			
 			if($db['dbdriver']==='mysqli')
 			{
-				class ab_model extends ab_mysqldriver
+				class generalMOdel extends  ab_mysqldriver
 				{
 					function __construct()
 					{
@@ -15,6 +15,14 @@ global $db;
 				
 				       
 		  }
+		}
+		
+		class ab_model extends generalMOdel
+		{
+			function __construct()
+			{
+				parent::__construct();
+			}
 		}
 		
 	

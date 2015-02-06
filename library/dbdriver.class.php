@@ -13,7 +13,15 @@ abstract class ab_dbdriver
 	public static $db_instance = false;
 	protected $condition;
 	protected $table;
-	 
+	protected $one_to_one = false;
+	protected $one_to_many = false;
+	protected $many_to_many = false;
+	protected $has_one = array();
+	protected $has_many = array();
+	protected $has_many_belongs_to_many= array();
+	protected $orderby;
+	protected $groupby;
+	protected $order='ASC';
 	function __construct($params)
 	{
 		
@@ -30,9 +38,9 @@ abstract class ab_dbdriver
 	    
 	}
 	
+	
+	
 	//abstract function dbconnect();
-	
-	
 	public function initialize()
 	{
 		if($this->connection_id !=false)
@@ -63,7 +71,12 @@ abstract class ab_dbdriver
 	}
 	
 	public abstract function get_array($resultset);
+	public abstract function get_indexed_array();
 	public abstract function query($query);
+	public abstract function search();
+	public  function showHasOne(){$this->one_to_one = true;}
+	public  function showhasMany(){$this->one_to_many = true;}
+	public  function showManyToMany(){$this->many_to_many = true;}
 	
 }
 
