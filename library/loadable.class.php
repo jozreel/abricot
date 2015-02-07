@@ -153,9 +153,19 @@ class ab_loadable
 		{
 			$this->ab_cached_vars = array_merge($this->ab_cached_vars, $ab_vars);
 		}
-		extract($this->ab_cached_vars);
+	//	extract($this->ab_cached_vars);
+	
+		$buffer = $ABC->output->create_output($ab_path, $this->ab_cached_vars);
+		if($ab_return)
+		{
+				
+			
+			return  $buiffer;
+		}
+		else
+			$ABC->output->ab_append_output($buffer);
 		//print_r($this->ab_cached_vars);
-		ob_start();
+   /*    ob_start();
 		
 		include($ab_path);
 		
@@ -187,7 +197,7 @@ class ab_loadable
 			//echo $buff;
 			
 			
-		}
+		}*/
 			
 	}
 	

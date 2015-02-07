@@ -192,7 +192,7 @@ else if(substr_count($_SERVER['HTTP_ACCEPT_ENCODING'],'gzip'))
 		      //$ob = ob_deflatehandeler();
 			  
 		         ob_start('ob_gzhandler');
-		         var_dump($modules);
+		         //var_dump($modules);
 		          
 	}
 else

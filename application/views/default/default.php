@@ -6,7 +6,7 @@
  global $template;
  $template['regions']['bottom']="lower content";
  ?>
-<title><?php echo $title ?></title>
+<title>{title}</title>
 <?php  echo $html->includeCss("main"); ?>
 <!-- <script type="text/javascript">
 var imgThmb = document.createElement('img');

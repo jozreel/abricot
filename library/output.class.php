@@ -4,9 +4,13 @@ class ab_output
 	
 	
 	protected $output_data;
+	protected $ab_ob_level;
+
 	
-	function ab_append_output($output)
+
+	function ab_append_output($output, $flush=false)
 	{
+		
 		
 		if(empty($this->output_data))
 		{
@@ -14,10 +18,47 @@ class ab_output
 			
 		}
 		else {
-			$this->output_data .=$output;
+			if(!$flush)
+			    $this->output_data .=$output;
+			else 
+				$this->output_data = $output;
 		}
 		
 		return $this;
+	}
+	
+	public function create_output($viewf,  $vars=array(), $flush=false)
+	{
+	//	$d = file_get_contents($viewf);
+		$this->ab_ob_level = ob_get_level();
+
+		ob_start();
+		include($viewf);
+		$buffer ='';
+		if(ob_get_level() > $this->ab_ob_level +1)
+		{
+		
+		
+			ob_end_flush();
+		}
+		else
+		{
+			$buffer = ob_get_contents();
+		
+			@ob_end_clean();
+		}
+	  $pattern = '/\{(\w+)\}/';
+	     $output = preg_replace_callback($pattern,function ($matches)  use ($vars){
+	///	global $template;
+		$repvars =  $vars;
+		return $repvars[$matches[1]];
+	
+	
+	}, $buffer);
+	
+	 return $output;
+
+	  
 	}
 	
 	
@@ -45,6 +86,9 @@ class ab_output
 	
 	public function ab_display_output()
 	{
+		//get the output;
+		//ob_start();
+		
 		echo $this->output_data;
 	}
 }

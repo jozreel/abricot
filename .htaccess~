@@ -1,0 +1,7 @@
+<IfModule mod_rewrite.c>
+Options +FollowSymLinks -MultiViews -Indexes
+DirectoryIndex index.php index.html index.htm
+    RewriteEngine on
+    #RewriteRule    ^$    public/    [L]
+    RewriteRule    ^(.*)$    $1/public/    [L]
+ </IfModule>
