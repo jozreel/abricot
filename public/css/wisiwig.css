@@ -3,6 +3,11 @@
 #contextlist li{width:100%; background: #FAFAFA; border-bottom: 2px groove #fff; height: 20px;}
 .wcontainer{position: relative; width: 860px; margin: 0 auto; height: 320px;}
 #txtarea{position: absolute; top: 0; background: yellow; padding: 10 20 0 20;} 
-#side{width: 1000px; background:#03A9F4; visibility: hidden; margin: 0 auto;}
+#side{width: 1000px; background:#03A9F4; visibility:hidden; margin: 0 auto;}
+body {
+	background: white;
+}
+.inc{background: yellow;}
+
 
 

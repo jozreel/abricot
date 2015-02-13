@@ -9,8 +9,9 @@ class ab_controller
 	public $output;
 	private $noRender;
 	private $dbdriver;
+	public  $load;
 	
-	function __construct() 
+	function  __construct() 
 	{
 		//$this->load_dbdriver();
 		self::$ab_instance = $this;
@@ -44,5 +45,17 @@ class ab_controller
 	function __destruct()
 	{
 		$this->output->render($this->noRender);
+	}
+	
+	public function writeModel()
+	{
+		$models = array();
+		$models = $this->load->getLoadedModels();
+		foreach ($models as $model)
+		{
+			
+			//var_dump($this->$model);
+			$this->$model->createTables();
+		}
 	}
 }

@@ -329,4 +329,8 @@ class ab_loadable
 		$this->ab_autoload();
 	}
 		
+	public function getLoadedModels()
+	{
+		return  $this->ab_models;
+	}
 }

@@ -19,10 +19,14 @@ global $db;
 		
 		class ab_model extends generalMOdel
 		{
+			protected  $fields_description;
 			function __construct()
 			{
 				parent::__construct();
+				$this->fields_description  = array();
 			}
+			
+			
 		}
 		
 	

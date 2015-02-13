@@ -1,9 +1,9 @@
 <?php
 $db = array();
-$db['dbdriver'] = '';
-$db['dbhost']='';
-$db['dbuser']='';
-$db['dbpassword']='';
-$db['dbname']='';
+$db['dbdriver'] = 'mysqli';
+$db['dbhost']='localhost';
+$db['dbuser']='root';
+$db['dbpassword']='inf200316';
+$db['dbname']='abricot';
 $db['dbport']="";
 //$active_schema = 'default';

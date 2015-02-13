@@ -1,11 +1,12 @@
 <?php $html = new ab_html(); 
 // global $template;
- echo $html->includeCss("wisiwig");
+
  
- ?>
-<!--  <html>
+ ?>  
+ <!-- 
+ <html>
  <head>
- 
+
  </head>
  <body>
  
@@ -37,20 +38,19 @@
  
  <!DOCTYPE html>
 <html>
+<head>
+<meta name="viewport" content="width=device-width" />
+<?php echo $html->includeCss("wisiwigmobile", "only screen and (max-device-width:766px)"); ?> 
+<?php echo $html->includeCss("wisiwig", "screen  and (min-device-width: 1024px)"); ?> 
+<?php echo $html->includeCss("wisiwigtab", "only screen and (min-device-width: 768px) and (max-device-width: 1024px)"); ?> 
+<!--[if (lt IE 9)&(!IEMobile)]>
+ <?php echo $html->includeCss("wisiwig", "screen");  ?> 
+<![endif]-->
+</head>
 <body>
-<input type="submit" id="in"/>
-<div id = "side"><form action="" method="post">
-<p>
-<label for="name">Name</label>
-<input name="name"  type="text"  id = "name" />
-</p>
-<p>
-<label for="email">Email</label>
-
-<input type="email"  name="email" id="email" />
-</p>
-<input type="submit">
-</form></div>
+<p>I have a date on <time datetime="2015-02-12T08:00:00+00:00">Valentines day</time>10:00.</p>
+<input type="submit" id="in" class="inc" />
+<div id = "side"></div>
 {title}
 <canvas id="box" width="800" height="400"  style="border:1px solid #d3d3d3;">
 Your browser does not support the HTML5 canvas tag.
@@ -73,7 +73,7 @@ ctx.fillRect(50,50,80,80);
 
 }*/
 </script>
-
+<script type="text/javascript">redystate(); </script>
 </body>
 </html>
  

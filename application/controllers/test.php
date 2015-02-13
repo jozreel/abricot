@@ -9,8 +9,10 @@ class Test extends ab_controller
 		
 		$als = array();
 		$als['title'] = 'this is an example of how to use array';
-		//$this->load->model('Party');
-		//$this->Party->id=$id;
+		$this->load->model('Party');
+		$this->load->model('Candidates');
+		$this->Party->id=$id;
+        $this->writeModel();
 		//$this->Party->party_name='LABA';
 		//$this->Party->abbr='DLP';
 		//$this->Party->save();

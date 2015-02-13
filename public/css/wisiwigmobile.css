@@ -1,0 +1,12 @@
+ body {
+   background: red;
+  }
+
+@media screen only and (max-device-width: 480px) {
+ .inc{background: gray;}
+}
+
+@media screen and (min-width:30.5em) {
+
+.inc{background: fuchsia;}
+}*/

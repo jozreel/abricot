@@ -7,7 +7,7 @@ define('DB_HOST', 'localhost'); /** The Hostname or IP addrss of the database se
 define('DB_PORT', '3306');        /** The port for db **/
 define('DB_USER', 'dbuser');    /** The DB user for abricot **/
 define('DB_PASSWORD', 'password'); /** The password for abricot DB **/
-define('BASE_PATH', 'http://localhost/abricot'); /** The basepath for this application **/
+define('BASE_PATH', 'http://192.168.1.2/abricot'); /** The basepath for this application **/
 define('PAGINATION_LIMIT', '5'); /** The maximum number to display per page when pagination used **/
 define('class_prefix', 'ab_');
 define('MODEL_PATH', ROOT.DS.'application'.DS.'models'.DS);

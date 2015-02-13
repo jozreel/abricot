@@ -70,10 +70,14 @@ abstract class ab_dbdriver
 		
 	}
 	
+	public abstract  function createTablequery();
+	
+	
 	public abstract function get_array($resultset);
 	public abstract function get_indexed_array();
 	public abstract function query($query);
 	public abstract function search();
+	public abstract  function createTables();
 	public  function showHasOne(){$this->one_to_one = true;}
 	public  function showhasMany(){$this->one_to_many = true;}
 	public  function showManyToMany(){$this->many_to_many = true;}

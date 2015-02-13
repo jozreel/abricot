@@ -21,10 +21,11 @@ class ab_html{
 		return $data;
 	}
 	
-	public function includeCss($fileName)
+	public function includeCss($fileName, $media="")
 	{
 		
-		$data = '<link href="'.BASE_PATH.'/css/'.$fileName.'.css" rel="stylesheet"></link>';
+		if($media !==""){$media =  'media="'.$media.'"';}
+		$data = '<link href="'.BASE_PATH.'/css/'.$fileName.'.css" rel="stylesheet" '.$media.'  />';
 		return $data;
 	}
 	

@@ -3,16 +3,16 @@
  */
 
 //lert("ya");
-document.addEventListener("DOMContentLoaded", function() {
-	var movx = new anim("box", 0.01, 0, 1);
+/*document.addEventListener("DOMContentLoaded", function() {
+	var movx = new anim('side', 0.01, 0, 1);
 
 	var el = document.getElementById('in');
 	var bx = document.getElementById('box');
 	el.addEventListener("click", function(){
 		st = new style();
-		st.left = '0';
+		st.left = '0'; */
 		//alert(st.left);
-       movx.move('image', 10, 10, 200, 200,'#fffccc');
+      // movx.move('image', 10, 10, 200, 200,'#fffccc');
 		//movx.slide(0,100);
 		
 	
@@ -25,14 +25,54 @@ document.addEventListener("DOMContentLoaded", function() {
 		
 		
 	    
-		});
+//		});
 	
 	
 	//var movx = new anim("box", 5, 1, 300);
 	//movx.move;
 	//var el = document.getElementById('txtarea');
 	//animate("box", 1, 5, 300);
-});
+//});
+
+function init()
+{
+	checkScreen();
+	checkDevice();
+	var movx = new anim('side', 0.01, 0, 1);
+	var el = document.getElementById('in');
+	var bx = document.getElementById('box');
+	el.addEventListener("click", function(){
+		st = new style();
+		st.left = '0'; 
+		//alert(st.left);
+      // movx.move('image', 10, 10, 200, 200,'#fffccc');
+		//movx.slide(0,100);
+		
+	
+	//	movx.fadein(0.01, 0.01, 1, 20);
+	//	movx.fillin(0, 10, 800, 'leftright', 1);
+		movx.explode(0, 800, 500, 10, 1);
+	  //  alert(bx)
+	//ctx =  bx.getContext("2d");
+//  testDrayImg(200,200,10,10,ctx);
+	});
+
+}
+function redystate()
+{//  alert('we ready to roll');
+	var  interval = setInterval(function(){
+		if(document.readyState === "complete")
+			{
+		       
+		         clearInterval(interval)
+		         init();
+		         return true;
+			}
+		//else alert('no');
+		          }, 10);
+	        
+	
+}
 //alert(document.body.clientWidth);
 //var el = document.getElementById('in');
 //el.oncontextmenu = RightMouseDown; 
@@ -445,6 +485,60 @@ function testDrayImg(imgdd, x,y,ctx)
 }
 
 
+
+function checkScreen()
+{
+	//alert(screen.width);
+	if(screen.width < 480)
+		{
+		    //alert
+		}
+ 	
+}
+
+
+
+function checkDevice()
+{
+
+		//alert(navigator.userAgent);
+		var useragent = navigator.userAgent.toLowerCase();
+  
+	 if(useragent.search('ipad')){
+	   return 'ipad';
+	 }
+
+	 else  if(useragent.search('iphone')){
+	 return 'iphone';
+	 }
+
+
+	 else  if(useragent.search("android") !== -1){
+          return 'android';
+	 }
+
+
+
+	 else  if(useragent.search('blackbery')){
+	  return 'blackberry';
+	 }
+	 else if(navigator.userAgent.match(/webOS/i)){
+	  //code for webOS here 
+	 }
+	 else{
+		 return 'desktop';
+	 }
+
+
+	
+}
+
+function ismobile()
+{
+   	if(checkDevice() !='desktop' && checkScreen() <1024)
+   		return true;
+   	else return false;
+}
 //check this out update it for use 
 /*
 function getSupportedPropertyName(properties) {

@@ -9,15 +9,19 @@ class ab_mysqldriver extends ab_dbdriver
 		{
 			$this->dbhost .=':'.$this->dbport;
 		}*/
-		
+		if($this->connection_id ==null)
+		{
+			//echo "connecting to db";
 		$this->connection_id = $this->mysqli_inst = new mysqli($this->dbhost, $this->dbuser, $this->dbpassword,$this->dbport);
 		$this->db_sellect($this->dbname);
+		}
 	    //var_dump($this->connection_id);
 	}
 	
 public function initialize()
 	{
-		
+		$this->connection_id = $this->mysqli_inst = new mysqli($this->dbhost, $this->dbuser, $this->dbpassword,$this->dbport);
+		$this->db_sellect($this->dbname);
 	}
 	
 	public function platform()
@@ -157,9 +161,14 @@ public function initialize()
 	
 	public function query($query)
 	{
-		//echo $query;
-		$result = $this->mysqli_inst->query($query) or die($this->mysqli_inst->error);
-		return $result;
+		$result;
+		echo $query .'<br />';
+	 if($this->mysqli_inst != null)
+	 {
+	 	$result = $this->mysqli_inst->query($query) or die($this->mysqli_inst->error);
+	 }
+		
+	 return $result;
 	}
 	
 	public function search()
@@ -293,6 +302,306 @@ public function initialize()
 		}
 	}
 	
+	public function createTables()
+	{
+	//	var_dump($this);
+	if(!$this->check_if_table_exist(get_class($this)))
+	         $this->query( $this->createTablequery());
+	  $this->createOneToOneConstraints();
+	  $this->createManyToManyConstraints();
+	}
+	
+	public   function createTablequery()
+	{
+	//var_dump($this);
+	//$name = get_class($tablenom);
+	
+
+	$pk1 = " ";
+	$class = get_class($this);
+	$quer = 'CREATE TABLE IF NOT EXISTS '.strtolower(ab_singular::singularize($class)).' (';
+	$objarr =  get_object_vars($this);
+	$field_desc =  $objarr['fields_description'];
+	$trmd_arr =  array_map('trim', array_keys($field_desc));
+	if(!in_array('id', $trmd_arr))
+		array_push($field_desc, 'id');
+	foreach ($field_desc as $field => $desc)
+	{
+		
+		if($field == 'id')
+		{
+		
+			$quer.= 'id int NOT NULL ,';
+			$pk1 = 'PRIMARY KEY(id),';
+		}
+		else
+		       $quer .= $field. ' '. $desc.' ,';
+	}
+
+	
+	foreach ($this->has_one as $a => $b)
+	{
+	if(!(in_array(ab_singular::singularize(strtolower($b)).'id', array_map('trim', array_keys($this->fields_description)))))
+	{
+		$quer .= ab_singular::singularize(strtolower($b)).'id  int,';
+		//echo $ref;
+		//echo $quer;
+		//echo '<br />'. strtolower($b).'id';
+	}
+	}
+	//$otofk = $this->createOneToOneConstraints($quer);
+	$quer .='  '.$pk1;
+	$quer = substr($quer, 0, -1);
+	//echo $quer;
+	//$quer = $quer . $otofk;
+	
+    $quer.=' )  ';
+ 
+	return $quer;
+	//	$quer = 'create table if not exist '.$tablenom
+	}
+	
+	
+	public function check_if_table_exist($tablename)
+	{
+        //  echo $tablename. ' mo';
+        
+          $querpp = "SHOW TABLES LIKE '".trim(strtolower(ab_singular::singularize($tablename)))."'";
+        
+		$result = $this->query($querpp);
+	//	var_dump($result);
+		$tableExists = false;
+		if($result->num_rows > 0)
+			$tableExists = true;
+	//	echo $result->num_rows;
+		//echo $tableExists;
+		return $tableExists;
+	}
+	
+	public function check_column_exist($tablename, $fieldname)
+	{
+		$colExists = false;
+	
+		if($this->check_if_table_exist($tablename))
+		{
+		$quercc = "SHOW COLUMNS FROM ".trim(strtolower(ab_singular::singularize($tablename)))." LIKE '".trim($fieldname)."' ";
+	//	echo $quercc;
+		$resultcc = $this->query($quercc);
+		//	var_dump($result);
+	
+		if($resultcc->num_rows > 0)
+			$colExists = true;
+	//	echo $resultcc->num_rows;
+		//echo $tableExists;
+		//echo $colExists;
+		}
+		return $colExists;
+		
+	}
+	
+	public function createManyToManyConstraints()
+	{
+		
+		$classhasof = get_class($this);
+		$foreign_keysMtoM = ' ';
+		$on = ' ';
+		foreach ($this->has_many as $aliasmany => $tablemany)
+		{
+			if(class_exists($tablemany))
+			{
+			if(!$this->check_if_table_exist($tablemany))
+			{
+				
+					echo $tablemany;
+					//echo $this->check_if_table_exist(strtolower(ab_singular::singularize($tablemany)));
+					if(!$this->check_if_table_exist($tablemany))
+					{
+							
+						$this->create_table_many($tablemany);
+					}
+			
+			}
+			
+		     //maybe should check field desc also
+		      	if(!isset($tablemany[ab_singular::singularize(strtolower($classhasof)).'id']))
+		      	{
+		      		if(!$this->check_column_exist($tablemany, ab_singular::singularize(strtolower($classhasof)).'id'))
+		      		{
+		      		        $queralt = 'ALTER TABLE ' . ab_singular::singularize(strtolower($tablemany)).'  ADD '.ab_singular::singularize(strtolower($classhasof)).'id int';
+		      	          //  echo $queralt;
+		      		         $this->query($queralt);
+		      		}
+		      	}
+		      	if(!$this->get_constraint("fk_".ab_singular::singularize(strtolower($classhasof))."_".ab_singular::singularize(strtolower($tablemany))))
+		      	{
+				$foreign_keysMtoM .= " ALTER TABLE  ". ab_singular::singularize(strtolower($tablemany))."   ADD  CONSTRAINT fk_".ab_singular::singularize(strtolower($classhasof))."_".ab_singular::singularize(strtolower($tablemany))." FOREIGN KEY (". ab_singular::singularize(strtolower($classhasof)).'id) REFERENCES '. ab_singular::singularize(strtolower($classhasof)).'(id)';
+			//	echo $foreign_keysMtoM;
+				$this->query($foreign_keysMtoM);
+		      	}
+		      }
+		}
+		
+	}
+	
+	
+	public function createOneToOneConstraints()
+	{
+		$foreign_keys = "  ";
+	
+		foreach ($this->has_one as $alias => $table)
+		{
+			if(!$this->check_if_table_exist(ab_singular::singularize(strtolower($table))))
+			{
+				$a= null;
+					if(class_exists($table))
+					{
+		
+						$a = new $table;
+					     $a->createTables();
+					}
+			}
+			if($this->check_if_table_exist(ab_singular::singularize(strtolower($table))))
+			{
+				$classtabne = get_class($this);
+				if(!isset($classtabne[ab_singular::singularize(strtolower($table)).'id']))
+				{  
+					if(! $this->check_column_exist(ab_singular::singularize(strtolower(get_class($this))),  ab_singular::singularize(strtolower($table)).'id'))
+					{
+					$queralt = 'ALTER TABLE ' . ab_singular::singularize(strtolower(get_class($this))).'  ADD '.ab_singular::singularize(strtolower($table)).'id int';
+					$this->query($queralt);
+					}
+				}
+				if(!$this->get_constraint("fk_". ab_singular::singularize(strtolower($table))."_".strtolower(ab_singular::singularize(get_class($this)))))
+				{
+		               $foreign_keys .= "ALTER TABLE " .strtolower(ab_singular::singularize(get_class($this)))." ADD  CONSTRAINT fk_". ab_singular::singularize(strtolower($table))."_".strtolower(ab_singular::singularize(get_class($this)))." FOREIGN KEY( ". ab_singular::singularize(strtolower($table)).'id)  REFERENCES '. ab_singular::singularize(strtolower($table)).'(id)';
+		               $this->query($foreign_keys);   
+				}
+		                  
+			}
+						
+			}
+			
+		
+		return $foreign_keys;
+	}
+	
+	public function  create_table_many($tablename)
+	{
+		$classhasoffk = get_class($this);
+		if(class_exists($tablename, false))
+		{
+		//	echo $tablename.'lplp';
+	     $mod = new $tablename;
+	     
+		 $fieldsc = $mod->fields_description;
+		 $fldtrm = array_map('trim', array_keys($fieldsc));
+		 if(in_array('id',  $fldtrm) ==false)
+		 {
+		 
+		 	array_push($fields, 'id');
+		 }
+		
+	
+			//$newtable = $abinst->$tablename;
+		    
+			$quermm = 'CREATE TABLE IF NOT EXISTS '.strtolower(ab_singular::singularize($tablename)).' (';
+            $pk = ' ';
+			foreach ($fieldsc as $prop =>$value)
+			{
+				
+				if($prop == 'id')
+				{
+				
+					$quermm.= 'id int NOT NULL ,';
+					$pk = 'PRIMARY KEY(id),';
+				}
+				else
+			    	$quermm .= $prop. ' '. $value.' ,';
+			}
+			
+			foreach ($this->has_one as $aa => $bb)
+			{
+				if(!(in_array(ab_singular::singularize(strtolower($bb)).'id', array_map('trim', array_keys($this->fields_description)))))
+				{
+					$quermm .= ab_singular::singularize(strtolower($b)).'id  int,';
+					//echo $ref;
+					//echo $quer;
+					//echo '<br />'. strtolower($b).'id';
+				}
+			}
+		
+	
+		$quermm .='  '.$pk;
+		
+		//$fk = " FOREIGN KEY( " .ab_singular::singularize(strtolower($classhasoffk)).'id) REFERENCES '. ab_singular::singularize(strtolower($classhasoffk)).'(id) ';
+	  //  $quermm = $quermm.$fk;
+	    $quermm = substr($quermm, 0, -1);
+	    $quermm .=')';
+	//   echo $quermm;
+	   $this->query($quermm);
+	   $mod->createOneToOneConstraints();
+	   $mod->createManyToManyConstraints();
+
+		}
+	}
+	
+	
+	public function  ab_model_create_table($tablename)
+	{
+		$classhasoffk = get_class($this);
+		if(class_exists($tablename, true))
+		{
+			$mod = new $tablename;
+	
+			$fieldsc = $mod->fields_description;
+			$fldtrm = array_map('trim', array_keys($fieldsc));
+			if(in_array('id',  $fldtrm) ==false)
+			{
+					
+				array_push($fields, 'id');
+			}
+	
+			$mod->createManyToManyConstraints();
+			//$newtable = $abinst->$tablename;
+	
+			$quermm = 'CREATE TABLE IF NOT EXISTS '.strtolower(ab_singular::singularize($tablename)).' (';
+			$pk = ' ';
+			foreach ($fieldsc as $prop =>$value)
+			{
+	
+				if($prop == 'id')
+				{
+	
+					$quermm.= 'id int NOT NULL ,';
+					$pk = 'PRIMARY KEY(id),';
+				}
+				else
+					$quermm .= $prop. ' '. $value.' ,';
+			}
+				
+			 
+	
+	
+			$quermm .='  '.$pk;
+	
+			$quermm = substr($quermm, 0, -1);
+			$quermm .=')';
+			//  echo $quermm;
+			$this->query($quermm);
+		}
+	}
+	
+	public function get_constraint($constname)
+	{
+		$constQ = "select CONSTRAINT_NAME from information_schema.table_constraints where constraint_schema ='".$this->dbname."'  and CONSTRAINT_NAME= '".$constname."'";
+		//echo $constQ;
+		$constRes = $this->query($constQ);
+		if($constRes->num_rows > 0)
+		   return true;
+		else 
+		  return false;
+	
+	}
 }
 
 
