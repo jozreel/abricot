@@ -151,7 +151,7 @@ public function initialize()
 	public function  get_array($resultset)
 	{
 		$resultarray = array();
-		while($row = $this->mysqli_inst->fetch_array($resultset, MYSQLI_ASSOC))
+		while($row = $resultset->fetch_array(MYSQLI_ASSOC))
 		{
 		array_push($resultarray, $row);
 		}
@@ -307,8 +307,11 @@ public function initialize()
 	//	var_dump($this);
 	if(!$this->check_if_table_exist(get_class($this)))
 	         $this->query( $this->createTablequery());
-	  $this->createOneToOneConstraints();
-	  $this->createManyToManyConstraints();
+	  $this->dropallfks();
+	$this->createOneToOneConstraints();
+	$this->createManyToManyConstraints();
+	$this->deleteoldfks();
+	$this->clearoldtomanyfks();
 	}
 	
 	public   function createTablequery()
@@ -432,9 +435,9 @@ public function initialize()
 		      		         $this->query($queralt);
 		      		}
 		      	}
-		      	if(!$this->get_constraint("fk_".ab_singular::singularize(strtolower($classhasof))."_".ab_singular::singularize(strtolower($tablemany))))
+		      	if(!$this->get_constraint("fkabom_".ab_singular::singularize(strtolower($classhasof))."_".ab_singular::singularize(strtolower($tablemany))))
 		      	{
-				$foreign_keysMtoM .= " ALTER TABLE  ". ab_singular::singularize(strtolower($tablemany))."   ADD  CONSTRAINT fk_".ab_singular::singularize(strtolower($classhasof))."_".ab_singular::singularize(strtolower($tablemany))." FOREIGN KEY (". ab_singular::singularize(strtolower($classhasof)).'id) REFERENCES '. ab_singular::singularize(strtolower($classhasof)).'(id)';
+				$foreign_keysMtoM .= " ALTER TABLE  ". ab_singular::singularize(strtolower($tablemany))."   ADD  CONSTRAINT fkabom_".ab_singular::singularize(strtolower($classhasof))."_".ab_singular::singularize(strtolower($tablemany))." FOREIGN KEY (". ab_singular::singularize(strtolower($classhasof)).'id) REFERENCES '. ab_singular::singularize(strtolower($classhasof)).'(id)';
 			//	echo $foreign_keysMtoM;
 				$this->query($foreign_keysMtoM);
 		      	}
@@ -471,9 +474,9 @@ public function initialize()
 					$this->query($queralt);
 					}
 				}
-				if(!$this->get_constraint("fk_". ab_singular::singularize(strtolower($table))."_".strtolower(ab_singular::singularize(get_class($this)))))
+				if(!$this->get_constraint("fkaboo_". ab_singular::singularize(strtolower($table))."_".strtolower(ab_singular::singularize(get_class($this)))))
 				{
-		               $foreign_keys .= "ALTER TABLE " .strtolower(ab_singular::singularize(get_class($this)))." ADD  CONSTRAINT fk_". ab_singular::singularize(strtolower($table))."_".strtolower(ab_singular::singularize(get_class($this)))." FOREIGN KEY( ". ab_singular::singularize(strtolower($table)).'id)  REFERENCES '. ab_singular::singularize(strtolower($table)).'(id)';
+		               $foreign_keys .= "ALTER TABLE " .strtolower(ab_singular::singularize(get_class($this)))." ADD  CONSTRAINT fkaboo_". ab_singular::singularize(strtolower($table))."_".strtolower(ab_singular::singularize(get_class($this)))." FOREIGN KEY( ". ab_singular::singularize(strtolower($table)).'id)  REFERENCES '. ab_singular::singularize(strtolower($table)).'(id)';
 		               $this->query($foreign_keys);   
 				}
 		                  
@@ -541,6 +544,7 @@ public function initialize()
 	   $this->query($quermm);
 	   $mod->createOneToOneConstraints();
 	   $mod->createManyToManyConstraints();
+	   
 
 		}
 	}
@@ -602,6 +606,150 @@ public function initialize()
 		  return false;
 	
 	}
+	
+	
+	
+	 public function get_all_constraints($table)
+	 {
+	 	$constQ = "select CONSTRAINT_NAME from information_schema.table_constraints where constraint_schema ='".$this->dbname."' AND TABLE_NAME = '".$table."' AND CONSTRAINT_TYPE = 'FOREIGN KEY'";
+	 	$constRes = $this->query($constQ);
+	 	$arr = $this->get_array($constRes);
+	 	
+	 	return $arr;
+	 }
+	 
+	 public function get_all_constraintsinschema()
+	 {
+	 	$constQ = "select CONSTRAINT_NAME, TABLE_NAME from information_schema.table_constraints where constraint_schema ='".$this->dbname."' AND CONSTRAINT_TYPE = 'FOREIGN KEY'";
+	 	$constRes = $this->query($constQ);
+	 	$arr = $this->get_array($constRes);
+	 	 
+	 	return $arr;
+	 }
+	 public function drop_consrraint($const_name, $tablename)
+	 {
+
+		$quer =  "ALTER TABLE ".$tablename." DROP FOREIGN KEY ". $const_name;
+		$this->query($quer);
+		
+	}
+	
+	public function dropallfks()
+	{
+		
+		 foreach ($this->has_many as $key => $val )
+		 {
+		 	$const = $this->get_all_constraints(ab_singular::singularize(strtolower( $val)));
+		//  var_dump($const[0]);
+		
+		 	$constName =  "fkabom_".ab_singular::singularize(strtolower(get_class($this)))."_".ab_singular::singularize(strtolower($val));
+		 	foreach ($const as $arr)
+		 	{
+		 	if (in_array($constName, $arr))
+		 	{
+		 		$this->drop_consrraint($constName, ab_singular::singularize(strtolower($val)));
+		 	}
+		 	}
+		 }
+		 
+		 foreach ($this->has_one as $aHO =>$tHO)
+		 {
+		 	$constHO = $this->get_all_constraints(ab_singular::singularize(strtolower(get_class($this))));
+		 	$constHasOne = "fkaboo_". ab_singular::singularize(strtolower($tHO))."_".strtolower(ab_singular::singularize(get_class($this)));
+		 	foreach ($constHO as $arrho)
+		 	{
+		   	if (in_array($constHasOne, $arrho))
+		 	{
+		 		$this->drop_consrraint($constHasOne, strtolower(ab_singular::singularize(get_class($this))));
+		 	}
+		 	}
+		 	
+		 }
+	}
+	
+	public function deleteoldfks()
+	{
+
+		$arrhone = array();
+		foreach ($this->has_one as $h =>$o)
+		{
+			$constO = "fkaboo_". ab_singular::singularize(strtolower($o))."_".strtolower(ab_singular::singularize(get_class($this)));
+			array_push($arrhone, $constO);
+		}
+		
+	//	var_dump($arr); echo '<br />'; var_dump($arrhone);
+			$const = $this->get_all_constraints(strtolower(ab_singular::singularize(get_class($this))));
+		     var_dump($const);
+			foreach ($const as $ar1)
+			{
+			
+			//	var_dump($ar1);
+				
+					if(strstr($ar1['CONSTRAINT_NAME'], "fkaboo_") )
+						if(!in_array($ar1['CONSTRAINT_NAME'], $arrhone) )
+						{
+						   $this->drop_consrraint($ar1['CONSTRAINT_NAME'], ab_singular::singularize(strtolower(get_class($this))));
+							echo  $ar1['CONSTRAINT_NAME'];
+							
+							echo "<br />fk_".ab_singular::singularize(get_class($this));
+						}
+						
+						//echo "i in";
+			
+			
+				
+		}
+	}
+		
+		function clearoldtomanyfks()
+		{
+		
+		$arr = array();
+		foreach ($this->has_many as $a => $t)
+		{
+			$cname =  "fkabom_".ab_singular::singularize(strtolower(get_class($this)))."_".ab_singular::singularize(strtolower($t));
+			array_push($arr, $cname);
+		}
+		$cO = $this->get_all_constraintsinschema();
+		foreach ($cO as $barr)
+		{
+
+			if(strstr($barr['CONSTRAINT_NAME'], "fkabom_".ab_singular::singularize(strtolower(get_class($this)))."_") )
+			{
+				if(!in_array($barr['CONSTRAINT_NAME'], $arr) )
+				{
+					$this->drop_consrraint($barr['CONSTRAINT_NAME'],$barr['TABLE_NAME'] );
+			}
+		}
+		
+		}
+		}
+		
+		/*	$cO = $this->get_all_constraints(ab_singular::singularize(strtolower(get_class($this))));
+			var_dump($cO);
+			
+		     var_dump($arrhone);
+		     foreach ($cO as $barr)
+		     {
+		    //	var_dump($barr);
+		     	foreach ($barr as $fld)
+		     	{
+		     		if(strstr($fld, "fk_"))
+		     		{
+		     			if(!in_array($fld, $arrhone) && (!in_array($fld, $arr)))
+		     			{
+		     		    	$this->drop_consrraint($fld, ab_singular::singularize(get_class($this)));
+		     			    echo $fld."<br />";
+		     			}
+		     		}
+		     	}
+		     }
+		     */
+		     
+		   
+	
+	
+    
 }
 
 
